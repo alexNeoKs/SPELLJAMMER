@@ -15,7 +15,6 @@
   <style>
     :root {
       --white: rgba(255, 255, 255, 0.96);
-      --gold: #ffd36a;
       --paper-dark: #332516;
       --seal-red: #792d23;
     }
@@ -176,9 +175,7 @@
         sans-serif;
 
       font-size: 9px;
-
       letter-spacing: 0.2em;
-
       text-transform: uppercase;
 
       color:
@@ -188,7 +185,7 @@
     }
 
     /* =========================================================
-       QIAOPI AREA
+       LETTER AREA
        ========================================================= */
 
     .poem-area {
@@ -241,7 +238,7 @@
         ),
         repeating-linear-gradient(
           92deg,
-          rgba(90, 55, 25, 0.018) 0px,
+          rgba(90, 55, 25, 0.018) 0,
           rgba(90, 55, 25, 0.018) 1px,
           transparent 1px,
           transparent 4px
@@ -336,8 +333,6 @@
       position: relative;
       z-index: 3;
 
-      text-align: left;
-
       color: #322418;
 
       font-family:
@@ -412,8 +407,7 @@
       top: 23px;
       right: 29px;
 
-      padding:
-        4px 7px;
+      padding: 4px 7px;
 
       font-size: 11px;
 
@@ -426,8 +420,7 @@
       left: 19px;
       top: 46%;
 
-      padding:
-        8px 4px;
+      padding: 8px 4px;
 
       writing-mode: vertical-rl;
 
@@ -566,60 +559,188 @@
 
     .letter-signature {
       position: relative;
-      z-index: 3;
+      z-index: 6;
 
       display: flex;
-      align-items: center;
       justify-content: flex-end;
+      align-items: flex-end;
 
-      gap: 8px;
+      gap: 12px;
 
-      margin-top: 27px;
+      margin-top: 28px;
 
       color:
-        rgba(71, 40, 22, 0.67);
+        rgba(70, 38, 21, 0.78);
 
-      font-size: 12px;
-
-      letter-spacing: 0.18em;
+      font-family:
+        "STKaiti",
+        "KaiTi",
+        "Kaiti SC",
+        "Songti SC",
+        serif;
     }
 
-    .signature-line {
-      display: inline-block;
+    .signature-person {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
 
-      width: 48px;
-      height: 1px;
+      gap: 2px;
+    }
 
-      background:
-        rgba(75, 43, 23, 0.35);
+    .signature-name {
+      font-size: 19px;
+
+      letter-spacing: 0.16em;
+
+      color: #54261d;
+    }
+
+    .signature-action {
+      font-size: 11px;
+
+      letter-spacing: 0.2em;
+
+      opacity: 0.72;
+    }
+
+    .signature-seal {
+      position: relative;
+
+      width: 32px;
+      height: 32px;
+
+      display: grid;
+      place-items: center;
+
+      border:
+        2px solid
+        rgba(142, 36, 27, 0.62);
+
+      color:
+        rgba(142, 36, 27, 0.68);
+
+      font-size: 18px;
+
+      line-height: 1;
+
+      transform: rotate(5deg);
+
+      mix-blend-mode: multiply;
+    }
+
+    .signature-seal::before {
+      content: "";
+
+      position: absolute;
+      inset: 3px;
+
+      border:
+        1px solid
+        rgba(142, 36, 27, 0.38);
     }
 
     /* =========================================================
        TABLET
        ========================================================= */
 
-    @media (max-width: 1050px) and (min-width: 701px) {
+    @media (max-width: 1024px) {
+
+      body {
+        overflow-y: auto;
+      }
+
       .page {
-        grid-template-columns:
-          minmax(0, 52%)
-          minmax(340px, 48%);
+        display: block;
+
+        width: 100%;
+
+        min-height: 100svh;
+      }
+
+      .flower-area {
+        position: relative;
+
+        width: 100%;
+
+        height: 54svh;
+        min-height: 54svh;
+      }
+
+      .flower-glow {
+        width: min(95vw, 720px);
+
+        top: 48%;
       }
 
       .poem-area {
-        padding-left: 12px;
-        padding-right: 28px;
+        width: 100%;
+
+        min-height: auto;
+
+        display: flex;
+
+        align-items: flex-start;
+        justify-content: center;
+
+        padding:
+          10px
+          clamp(28px, 6vw, 70px)
+          70px;
       }
 
       .qiaopi-letter {
+        width: min(88vw, 610px);
+
+        max-width: 610px;
+
         padding:
-          48px
-          42px
-          43px;
+          58px
+          clamp(42px, 6vw, 64px)
+          50px;
+
+        transform:
+          rotateZ(-0.3deg);
+
+        box-shadow:
+          0 30px 70px
+          rgba(0, 0, 0, 0.52);
+      }
+
+      .letter-header {
+        margin-bottom: 24px;
+
+        font-size: 12px;
+      }
+
+      .letter-title {
+        margin-bottom: 24px;
+
+        font-size:
+          clamp(20px, 2.8vw, 25px);
+      }
+
+      .poem {
+        text-align: center;
       }
 
       .poem p {
+        margin-bottom: 24px;
+
         font-size:
-          clamp(15px, 1.65vw, 19px);
+          clamp(17px, 2.35vw, 21px);
+
+        line-height: 1.9;
+
+        letter-spacing: 0.065em;
+      }
+
+      .letter-signature {
+        margin-top: 26px;
+      }
+
+      .hint {
+        display: none;
       }
     }
 
@@ -628,61 +749,50 @@
        ========================================================= */
 
     @media (max-width: 700px) {
-      body {
-        overflow-y: auto;
-      }
-
-      .page {
-        display: block;
-
-        min-height: 100svh;
-      }
 
       .flower-area {
-        width: 100%;
-
-        height: 50svh;
-        min-height: 50svh;
+        height: 49svh;
+        min-height: 49svh;
       }
 
       .flower-glow {
-        width: 105%;
+        width: 110%;
+
         top: 48%;
       }
 
       .poem-area {
-        min-height: auto;
-
-        display: flex;
-
         padding:
-          4px
-          max(17px, env(safe-area-inset-right))
+          3px
           max(
-            45px,
+            16px,
+            env(safe-area-inset-right)
+          )
+          max(
+            48px,
             calc(
-              25px +
+              28px +
               env(safe-area-inset-bottom)
             )
           )
-          max(17px, env(safe-area-inset-left));
+          max(
+            16px,
+            env(safe-area-inset-left)
+          );
       }
 
       .qiaopi-letter {
         width: 100%;
-        max-width: 470px;
+
+        max-width: 480px;
 
         padding:
-          48px
-          33px
-          43px;
+          47px
+          32px
+          42px;
 
         transform:
-          rotateZ(-0.4deg);
-
-        box-shadow:
-          0 25px 55px
-          rgba(0, 0, 0, 0.52);
+          rotateZ(-0.35deg);
       }
 
       .letter-header {
@@ -697,17 +807,17 @@
         font-size: 18px;
       }
 
-      .poem {
-        text-align: center;
-      }
-
       .poem p {
         margin-bottom: 21px;
 
         font-size:
-          clamp(14px, 4vw, 18px);
+          clamp(
+            14px,
+            4vw,
+            18px
+          );
 
-        line-height: 1.82;
+        line-height: 1.8;
 
         letter-spacing: 0.045em;
       }
@@ -742,24 +852,36 @@
       }
 
       .letter-signature {
-        margin-top: 21px;
+        margin-top: 22px;
       }
 
-      .hint {
-        display: none;
+      .signature-name {
+        font-size: 17px;
+      }
+
+      .signature-seal {
+        width: 29px;
+        height: 29px;
+
+        font-size: 16px;
       }
     }
 
+    /* =========================================================
+       SMALL PHONES
+       ========================================================= */
+
     @media (max-width: 390px) {
+
       .flower-area {
-        height: 47svh;
-        min-height: 47svh;
+        height: 46svh;
+        min-height: 46svh;
       }
 
       .qiaopi-letter {
         padding:
           43px
-          25px
+          24px
           39px;
       }
 
@@ -772,73 +894,9 @@
       .letter-title {
         font-size: 17px;
       }
-    }
 
-    /* =========================================================
-       LANDSCAPE PHONE
-       ========================================================= */
-
-    @media
-    (max-height: 520px)
-    and
-    (orientation: landscape) {
-
-      .page {
-        display: grid;
-
-        grid-template-columns:
-          48%
-          52%;
-      }
-
-      .flower-area {
-        height: 100svh;
-        min-height: 100svh;
-      }
-
-      .poem-area {
-        min-height: 100svh;
-
-        padding:
-          15px
-          25px
-          15px
-          6px;
-      }
-
-      .qiaopi-letter {
-        max-width: 410px;
-
-        padding:
-          35px
-          35px
-          30px;
-      }
-
-      .letter-header {
-        margin-bottom: 10px;
-      }
-
-      .letter-title {
-        margin-bottom: 10px;
-
-        font-size: 15px;
-      }
-
-      .poem {
-        text-align: left;
-      }
-
-      .poem p {
-        margin-bottom: 9px;
-
-        font-size: 11px;
-
-        line-height: 1.42;
-      }
-
-      .letter-signature {
-        margin-top: 10px;
+      .signature-name {
+        font-size: 16px;
       }
     }
 
@@ -852,7 +910,6 @@
 
 <body>
 
-  <!-- Fireworks behind everything -->
   <canvas id="fireworks"></canvas>
 
   <div class="background-vignette"></div>
@@ -937,8 +994,21 @@
         </div>
 
         <div class="letter-signature">
-          <span>谨书</span>
-          <span class="signature-line"></span>
+
+          <div class="signature-person">
+            <span class="signature-name">
+              梁家硕
+            </span>
+
+            <span class="signature-action">
+              谨书
+            </span>
+          </div>
+
+          <div class="signature-seal">
+            梁
+          </div>
+
         </div>
 
       </article>
@@ -997,7 +1067,7 @@
       THREE.PCFSoftShadowMap;
 
     /* ============================================================
-       LIGHTS
+       LIGHTING
        ============================================================ */
 
     const hemisphereLight =
@@ -1107,7 +1177,7 @@
         side: THREE.DoubleSide
       });
 
-    const paperMaterial =
+    const wrappingMaterial =
       new THREE.MeshPhysicalMaterial({
         color: 0xcfbd91,
         roughness: 0.85,
@@ -1117,7 +1187,7 @@
         depthWrite: false
       });
 
-    const paperLightMaterial =
+    const wrappingHighlightMaterial =
       new THREE.MeshPhysicalMaterial({
         color: 0xf4deb0,
         roughness: 0.85,
@@ -1738,12 +1808,11 @@
             )
           );
         }
-
       }
     );
 
     /* ============================================================
-       FLOWER WRAPPING
+       WRAPPING
        ============================================================ */
 
     const wrapperGeometry =
@@ -1759,7 +1828,7 @@
     const wrapper =
       new THREE.Mesh(
         wrapperGeometry,
-        paperMaterial
+        wrappingMaterial
       );
 
     wrapper.position.set(
@@ -1775,7 +1844,7 @@
     const wrapperHighlight =
       new THREE.Mesh(
         wrapperGeometry,
-        paperLightMaterial
+        wrappingHighlightMaterial
       );
 
     wrapperHighlight.position.set(
@@ -1943,7 +2012,11 @@
           1
         );
 
-      const mobile =
+      const stackedLayout =
+        window.innerWidth <=
+        1024;
+
+      const isPhone =
         window.innerWidth <=
         700;
 
@@ -1956,8 +2029,8 @@
       renderer.setPixelRatio(
         Math.min(
           window.devicePixelRatio,
-          mobile
-            ? 1.35
+          stackedLayout
+            ? 1.4
             : 1.8
         )
       );
@@ -1968,22 +2041,28 @@
 
       camera.updateProjectionMatrix();
 
-      if (mobile) {
+      if (stackedLayout) {
 
         camera.position.set(
           0,
-          0.1,
-          12
+          0.15,
+          isPhone
+            ? 12.3
+            : 11.5
         );
 
         bouquet.position.set(
           0,
-          -0.1,
+          isPhone
+            ? -0.08
+            : -0.18,
           0
         );
 
         bouquet.scale.setScalar(
-          0.70
+          isPhone
+            ? 0.69
+            : 0.78
         );
 
       } else {
@@ -2078,9 +2157,7 @@
           0.006;
 
         flowerHeads.forEach(
-          (
-            flower
-          ) => {
+          flower => {
 
             flower.mesh.rotation.z =
               flower.initial +
@@ -2120,11 +2197,8 @@
         "2d"
       );
 
-    let fireWidth =
-      0;
-
-    let fireHeight =
-      0;
+    let fireWidth = 0;
+    let fireHeight = 0;
 
     const particles = [];
     const stars = [];
@@ -2218,7 +2292,6 @@
             Math.random() *
             Math.PI *
             2
-
         });
       }
     }
@@ -2237,17 +2310,11 @@
     const fireworkColors = [
 
       [255, 220, 126],
-
       [255, 244, 210],
-
       [255, 185, 74],
-
       [255, 211, 105],
-
       [255, 153, 90],
-
       [255, 232, 145],
-
       [255, 205, 90]
 
     ];
@@ -2329,37 +2396,32 @@
 
     function randomFirework() {
 
-      const mobile =
+      const smallScreen =
         window.innerWidth <=
-        700;
+        1024;
 
       let x;
       let y;
 
-      if (mobile) {
+      if (smallScreen) {
 
         x =
           fireWidth *
           (
-            0.08 +
+            0.07 +
             Math.random() *
-            0.84
+            0.86
           );
 
         y =
           fireHeight *
           (
-            0.06 +
+            0.05 +
             Math.random() *
-            0.42
+            0.47
           );
 
       } else {
-
-        /*
-          Desktop:
-          bias fireworks toward edges.
-        */
 
         const leftSide =
           Math.random() <
@@ -2394,7 +2456,9 @@
       createFirework(
         x,
         y,
-        mobile
+
+        window.innerWidth <=
+          700
           ? 30
           : 48
       );
@@ -2441,8 +2505,7 @@
           star.y,
           star.radius,
           0,
-          Math.PI *
-            2
+          Math.PI * 2
         );
 
         ctx.fillStyle =
@@ -2467,8 +2530,7 @@
         randomFirework();
 
         /*
-          38% chance of another
-          firework shortly after.
+          Chance of a second burst
         */
 
         if (
@@ -2482,6 +2544,7 @@
               if (
                 !reducedMotion.matches
               ) {
+
                 randomFirework();
               }
 
@@ -2494,8 +2557,7 @@
         }
 
         /*
-          Automatic fireworks:
-          roughly every 0.5–1.15 seconds.
+          Roughly every 0.5 - 1.15 seconds
         */
 
         nextFirework =
