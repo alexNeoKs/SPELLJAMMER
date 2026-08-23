@@ -8,50 +8,44 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
 
-  <meta name="theme-color" content="#080b08" />
+  <meta name="theme-color" content="#050805" />
 
   <title>卿卿生辰喜乐</title>
 
   <style>
     :root {
-      --text: rgba(255, 255, 255, 0.96);
-      --muted: rgba(255, 255, 255, 0.48);
-      --gold: rgba(255, 215, 100, 0.8);
+      --white: rgba(255, 255, 255, 0.96);
+      --soft-white: rgba(255, 255, 255, 0.72);
+      --gold: #ffd36a;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      min-height: 100%;
+    html {
+      background: #050805;
     }
 
     body {
+      margin: 0;
       min-height: 100svh;
       overflow-x: hidden;
       background:
         radial-gradient(
-          circle at 28% 38%,
-          rgba(52, 67, 38, 0.28),
-          transparent 33%
+          circle at 27% 42%,
+          rgba(34, 57, 30, 0.24),
+          transparent 34%
         ),
         radial-gradient(
-          circle at 75% 40%,
-          rgba(100, 74, 28, 0.08),
-          transparent 35%
+          circle at 72% 48%,
+          rgba(77, 56, 19, 0.08),
+          transparent 34%
         ),
-        linear-gradient(
-          145deg,
-          #101510 0%,
-          #080b08 52%,
-          #050605 100%
-        );
+        #050805;
 
-      color: var(--text);
+      color: var(--white);
+
       font-family:
         "Songti SC",
         "Noto Serif CJK SC",
@@ -60,130 +54,171 @@
         serif;
     }
 
-    /* Three.js canvas */
-    #scene {
+    /* =========================================================
+       FIREWORK BACKGROUND
+       ========================================================= */
+
+    #fireworks {
       position: fixed;
       inset: 0;
-      z-index: 0;
 
       width: 100%;
       height: 100%;
 
-      display: block;
-      outline: none;
-
-      touch-action: pan-y;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* Soft vignette */
-    .vignette {
+    .background-vignette {
       position: fixed;
       inset: 0;
+
       z-index: 1;
-      pointer-events: none;
-
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 40%,
-          rgba(0, 0, 0, 0.18) 78%,
-          rgba(0, 0, 0, 0.42) 100%
-        );
-    }
-
-    /* subtle glow behind poem */
-    .poem-glow {
-      position: fixed;
-      z-index: 1;
-      top: 50%;
-      right: 2vw;
-
-      width: 42vw;
-      height: 75vh;
-
-      transform: translateY(-50%);
       pointer-events: none;
 
       background:
         radial-gradient(
           ellipse at center,
-          rgba(255, 210, 105, 0.055),
-          transparent 65%
+          transparent 35%,
+          rgba(0, 0, 0, 0.18) 67%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+    }
+
+    /* =========================================================
+       MAIN PAGE
+       ========================================================= */
+
+    .page {
+      position: relative;
+      z-index: 2;
+
+      min-height: 100svh;
+
+      display: grid;
+      grid-template-columns:
+        minmax(0, 58%)
+        minmax(320px, 42%);
+
+      align-items: stretch;
+    }
+
+    /* =========================================================
+       THREE.JS AREA
+       ========================================================= */
+
+    .flower-area {
+      position: relative;
+
+      min-width: 0;
+      min-height: 100svh;
+
+      overflow: hidden;
+    }
+
+    #scene {
+      position: absolute;
+      inset: 0;
+
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      outline: none;
+
+      touch-action: pan-y;
+    }
+
+    .flower-glow {
+      position: absolute;
+
+      left: 50%;
+      top: 45%;
+
+      width: 75%;
+      aspect-ratio: 1;
+
+      transform: translate(-50%, -50%);
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 206, 78, 0.075),
+          transparent 66%
         );
 
       filter: blur(30px);
     }
 
-    .poem {
-      position: fixed;
-      z-index: 2;
+    /* =========================================================
+       POEM
+       ========================================================= */
 
-      top: 50%;
-      right: clamp(32px, 7vw, 120px);
+    .poem-area {
+      position: relative;
 
-      width: min(36vw, 520px);
+      display: flex;
+      align-items: center;
 
-      transform: translateY(-50%);
-
-      text-align: left;
-
-      color: var(--text);
-
-      text-shadow:
-        0 2px 10px rgba(0, 0, 0, 0.5),
-        0 0 26px rgba(255, 235, 180, 0.05);
-
-      user-select: text;
+      padding:
+        max(50px, 7vh)
+        clamp(35px, 6vw, 110px)
+        max(50px, 7vh)
+        clamp(25px, 2vw, 60px);
     }
 
-    .poem::before {
-      content: "";
+    .poem {
+      width: min(100%, 540px);
 
-      display: block;
+      text-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(255, 238, 190, 0.05);
+    }
 
-      width: 34px;
+    .gold-line {
+      width: 38px;
       height: 1px;
 
-      margin-bottom: 25px;
+      margin-bottom: 28px;
 
       background:
         linear-gradient(
           90deg,
-          rgba(255, 221, 130, 0.9),
-          rgba(255, 221, 130, 0)
+          rgba(255, 210, 92, 0.95),
+          transparent
         );
     }
 
     .poem p {
-      margin: 0 0 24px;
+      margin: 0 0 25px;
 
-      font-size: clamp(17px, 1.35vw, 23px);
+      font-size: clamp(17px, 1.25vw, 23px);
       line-height: 2;
 
+      letter-spacing: 0.1em;
       font-weight: 400;
-      letter-spacing: 0.12em;
     }
 
     .poem p:last-child {
       margin-bottom: 0;
     }
 
-    .poem .ending {
+    .ending {
       color: #fff;
 
       text-shadow:
-        0 0 18px rgba(255, 225, 130, 0.12),
-        0 2px 10px rgba(0, 0, 0, 0.5);
+        0 0 18px rgba(255, 221, 123, 0.14),
+        0 2px 10px rgba(0, 0, 0, 0.75);
     }
 
-    .interaction-hint {
-      position: fixed;
-      z-index: 2;
+    .hint {
+      position: absolute;
 
-      left: 34px;
-      bottom: 25px;
-
-      color: var(--muted);
+      left: 20px;
+      bottom: 20px;
 
       font-family:
         -apple-system,
@@ -191,174 +226,257 @@
         "Segoe UI",
         sans-serif;
 
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.18em;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+
+      color: rgba(255, 255, 255, 0.38);
+
       text-transform: uppercase;
 
       pointer-events: none;
-
-      transition: opacity 1s ease;
     }
 
-    noscript {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
+    /* =========================================================
+       TABLET
+       ========================================================= */
 
-      display: grid;
-      place-items: center;
+    @media (max-width: 1000px) and (min-width: 701px) {
 
-      color: white;
-      background: #080b08;
+      .page {
+        grid-template-columns:
+          minmax(0, 55%)
+          minmax(300px, 45%);
+      }
 
-      padding: 30px;
-      text-align: center;
+      .poem-area {
+        padding-left: 15px;
+        padding-right: 35px;
+      }
+
+      .poem p {
+        font-size: clamp(15px, 1.7vw, 19px);
+      }
     }
 
-    /* -----------------------------------
+    /* =========================================================
        MOBILE
-       ----------------------------------- */
+       ========================================================= */
 
-    @media (max-width: 760px) {
+    @media (max-width: 700px) {
+
       body {
+        overflow-y: auto;
+      }
+
+      .page {
+        display: block;
         min-height: 100svh;
       }
 
-      .poem-glow {
-        top: auto;
-        bottom: 0;
-        right: 0;
-
+      .flower-area {
         width: 100%;
-        height: 55svh;
 
-        transform: none;
+        /*
+          The bouquet gets its own screen section.
+          This is what fixes the mobile sizing.
+        */
+        min-height: 54svh;
+        height: 54svh;
+      }
+
+      .flower-glow {
+        width: 105%;
+        top: 48%;
+      }
+
+      .poem-area {
+        min-height: 46svh;
+
+        display: block;
+
+        padding:
+          15px
+          max(23px, env(safe-area-inset-right))
+          max(48px, calc(28px + env(safe-area-inset-bottom)))
+          max(23px, env(safe-area-inset-left));
       }
 
       .poem {
-        position: relative;
+        width: 100%;
+        max-width: 480px;
 
-        top: auto;
-        right: auto;
-
-        width: auto;
-
-        transform: none;
-
-        margin-top: 51svh;
-
-        padding:
-          26px
-          max(22px, env(safe-area-inset-right))
-          max(40px, calc(env(safe-area-inset-bottom) + 24px))
-          max(22px, env(safe-area-inset-left));
+        margin: 0 auto;
 
         text-align: center;
       }
 
-      .poem::before {
-        margin: 0 auto 20px;
+      .gold-line {
+        margin:
+          0 auto
+          21px;
+
+        width: 45px;
 
         background:
           linear-gradient(
             90deg,
             transparent,
-            rgba(255, 221, 130, 0.8),
+            var(--gold),
             transparent
           );
       }
 
       .poem p {
-        margin-bottom: 19px;
+        margin-bottom: 20px;
 
         font-size: clamp(14px, 4vw, 18px);
-        line-height: 1.88;
+        line-height: 1.85;
 
-        letter-spacing: 0.06em;
+        letter-spacing: 0.055em;
       }
 
-      .interaction-hint {
+      .hint {
         display: none;
       }
-
-      .vignette {
-        background:
-          linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.02),
-            transparent 35%,
-            rgba(0, 0, 0, 0.12) 65%,
-            rgba(0, 0, 0, 0.35)
-          );
-      }
     }
 
-    @media (max-width: 380px) {
+    /* Smaller phones */
+
+    @media (max-width: 390px) {
+
+      .flower-area {
+        height: 50svh;
+        min-height: 50svh;
+      }
+
+      .poem-area {
+        min-height: 50svh;
+        padding-top: 10px;
+      }
+
       .poem p {
         font-size: 14px;
-        line-height: 1.75;
+        line-height: 1.72;
       }
     }
 
-    @media (max-width: 760px) and (max-height: 700px) {
+    /* Landscape phone */
+
+    @media (
+      max-height: 500px
+    ) and (
+      orientation: landscape
+    ) {
+
+      .page {
+        display: grid;
+
+        grid-template-columns:
+          52%
+          48%;
+      }
+
+      .flower-area {
+        height: 100svh;
+        min-height: 100svh;
+      }
+
+      .poem-area {
+        min-height: 100svh;
+
+        display: flex;
+
+        padding:
+          20px
+          25px
+          20px
+          10px;
+      }
+
       .poem {
-        margin-top: 48svh;
+        text-align: left;
+      }
+
+      .gold-line {
+        margin:
+          0 0
+          12px;
       }
 
       .poem p {
-        margin-bottom: 14px;
-        font-size: 13px;
-        line-height: 1.62;
+        margin-bottom: 10px;
+
+        font-size: 12px;
+        line-height: 1.48;
       }
     }
 
-    /* Respect accessibility preference */
     @media (prefers-reduced-motion: reduce) {
-      .interaction-hint {
+      .hint {
         display: none;
       }
     }
   </style>
 </head>
 
+
 <body>
 
-  <canvas
-    id="scene"
-    aria-hidden="true"
-  ></canvas>
+  <!-- Background fireworks -->
+  <canvas id="fireworks"></canvas>
 
-  <div class="vignette"></div>
-  <div class="poem-glow"></div>
+  <div class="background-vignette"></div>
 
-  <main class="poem" aria-label="生辰祝诗">
-    <p>
-      愿卿长似花初绽，<br />
-      无忧无恙少尘埃。<br />
-      年年今日同相守，<br />
-      共看灯火照楼台。
-    </p>
 
-    <p>
-      若问此心何所愿，<br />
-      唯愿卿安，唯愿卿欢；<br />
-      春秋与共，白首不改。
-    </p>
+  <main class="page">
 
-    <p class="ending">
-      卿卿生辰喜乐，<br />
-      愿岁岁长安，年年有我。
-    </p>
+    <!-- 3D bouquet -->
+    <section class="flower-area">
+
+      <canvas
+        id="scene"
+        aria-hidden="true"
+      ></canvas>
+
+      <div class="flower-glow"></div>
+
+      <div class="hint">
+        move to admire the flowers
+      </div>
+
+    </section>
+
+
+    <!-- Poem -->
+    <section class="poem-area">
+
+      <div class="poem">
+
+        <div class="gold-line"></div>
+
+        <p>
+          愿卿长似花初绽，<br>
+          无忧无恙少尘埃。<br>
+          年年今日同相守，<br>
+          共看灯火照楼台。
+        </p>
+
+        <p>
+          若问此心何所愿，<br>
+          唯愿卿安，唯愿卿欢；<br>
+          春秋与共，白首不改。
+        </p>
+
+        <p class="ending">
+          卿卿生辰喜乐，<br>
+          愿岁岁长安，年年有我。
+        </p>
+
+      </div>
+
+    </section>
+
   </main>
-
-  <div class="interaction-hint">
-    move to admire the flowers
-  </div>
-
-  <noscript>
-    此页面需要启用 JavaScript 才能显示花束。
-  </noscript>
 
 
   <script type="module">
@@ -367,152 +485,171 @@
       "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js";
 
 
-    // ============================================================
-    // BASIC THREE.JS SETUP
-    // ============================================================
+    /* ============================================================
+       THREE.JS SETUP
+       ============================================================ */
 
-    const canvas = document.querySelector("#scene");
+    const canvas =
+      document.querySelector("#scene");
 
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      42,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
-
-    camera.position.set(0, 0, 10.5);
+    const flowerArea =
+      document.querySelector(".flower-area");
 
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance"
-    });
+    const scene =
+      new THREE.Scene();
 
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
-    );
 
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio, 1.8)
-    );
+    const camera =
+      new THREE.PerspectiveCamera(
+        42,
+        1,
+        0.1,
+        100
+      );
 
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const renderer =
+      new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance"
+      });
+
+
+    renderer.outputColorSpace =
+      THREE.SRGBColorSpace;
 
     renderer.toneMapping =
       THREE.ACESFilmicToneMapping;
 
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure =
+      1.08;
 
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled =
+      true;
 
     renderer.shadowMap.type =
       THREE.PCFSoftShadowMap;
 
 
-    // ============================================================
-    // LIGHTING
-    // ============================================================
+    /* ============================================================
+       LIGHTING
+       ============================================================ */
 
     const hemisphereLight =
       new THREE.HemisphereLight(
         0xfff3ce,
-        0x152015,
+        0x142014,
         1.8
       );
 
-    scene.add(hemisphereLight);
+    scene.add(
+      hemisphereLight
+    );
 
 
     const keyLight =
       new THREE.DirectionalLight(
-        0xffe6a7,
-        4.2
+        0xffe1a0,
+        4
       );
 
-    keyLight.position.set(-4, 7, 7);
+    keyLight.position.set(
+      -4,
+      7,
+      7
+    );
 
-    keyLight.castShadow = true;
+    keyLight.castShadow =
+      true;
 
-    keyLight.shadow.mapSize.set(1024, 1024);
+    scene.add(
+      keyLight
+    );
 
-    scene.add(keyLight);
 
-
-    const fillLight =
+    const goldenLight =
       new THREE.PointLight(
-        0xffc557,
-        25,
-        15,
+        0xffbd42,
+        22,
+        16,
         2
       );
 
-    fillLight.position.set(-3, 1.5, 5);
+    goldenLight.position.set(
+      -3,
+      2,
+      5
+    );
 
-    scene.add(fillLight);
+    scene.add(
+      goldenLight
+    );
 
 
     const rimLight =
       new THREE.PointLight(
-        0xfff1cb,
-        15,
+        0xfff4d0,
         14,
+        15,
         2
       );
 
-    rimLight.position.set(3, 3, -2);
+    rimLight.position.set(
+      3,
+      4,
+      -2
+    );
 
-    scene.add(rimLight);
+    scene.add(
+      rimLight
+    );
 
 
-    // ============================================================
-    // MATERIALS
-    // ============================================================
+    /* ============================================================
+       MATERIALS
+       ============================================================ */
 
-    const petalMaterialOuter =
+    const outerPetalMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0xffc400,
-        roughness: 0.48,
-        metalness: 0.02
+        color: 0xffca39,
+        roughness: 0.46
       });
 
 
-    const petalMaterialInner =
+    const innerPetalMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0xffa800,
-        roughness: 0.5,
-        metalness: 0.01
+        color: 0xffad22,
+        roughness: 0.48
       });
 
 
     const centerMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0x3a1d0c,
-        roughness: 0.88
+        color: 0x3a1a09,
+        roughness: 0.9
       });
 
 
     const seedMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0x8f5019,
-        roughness: 0.76
+        color: 0xd56b1d,
+        roughness: 0.7
       });
 
 
     const stemMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0x315c2d,
-        roughness: 0.82
+        color: 0x426d28,
+        roughness: 0.8
       });
 
 
     const leafMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0x416f35,
+        color: 0x668d38,
         roughness: 0.88,
         side: THREE.DoubleSide
       });
@@ -520,21 +657,21 @@
 
     const paperMaterial =
       new THREE.MeshPhysicalMaterial({
-        color: 0xd5c09b,
-        roughness: 0.8,
+        color: 0xcfbd91,
+        roughness: 0.85,
         transparent: true,
-        opacity: 0.34,
+        opacity: 0.39,
         side: THREE.DoubleSide,
         depthWrite: false
       });
 
 
-    const paperHighlightMaterial =
+    const paperLightMaterial =
       new THREE.MeshPhysicalMaterial({
-        color: 0xf0dfbd,
-        roughness: 0.9,
+        color: 0xf4deb0,
+        roughness: 0.85,
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.14,
         side: THREE.DoubleSide,
         depthWrite: false
       });
@@ -542,15 +679,14 @@
 
     const ribbonMaterial =
       new THREE.MeshStandardMaterial({
-        color: 0xd0a348,
+        color: 0xe1b54c,
         roughness: 0.5
       });
 
 
-    // ============================================================
-    // SHARED GEOMETRY
-    // Re-using geometry makes the page much faster on phones.
-    // ============================================================
+    /* ============================================================
+       SHARED GEOMETRY
+       ============================================================ */
 
     const petalGeometry =
       new THREE.SphereGeometry(
@@ -592,48 +728,51 @@
       );
 
 
-    // ============================================================
-    // MAIN BOUQUET GROUP
-    // ============================================================
+    /* ============================================================
+       BOUQUET
+       ============================================================ */
 
     const bouquet =
       new THREE.Group();
 
-    scene.add(bouquet);
+    scene.add(
+      bouquet
+    );
 
 
     const flowerHeads = [];
 
 
-    // ============================================================
-    // CREATE A SUNFLOWER
-    // ============================================================
-
-    function createSunflower(radius = 1) {
+    function createSunflower(
+      radius = 1
+    ) {
 
       const flower =
         new THREE.Group();
 
 
-      // ----------------------------------------------------------
-      // OUTER PETALS
-      // ----------------------------------------------------------
+      const dummy =
+        new THREE.Object3D();
 
-      const outerCount = 26;
+
+      /*
+        OUTER PETALS
+      */
+
+      const outerCount =
+        28;
+
 
       const outerPetals =
         new THREE.InstancedMesh(
           petalGeometry,
-          petalMaterialOuter,
+          outerPetalMaterial,
           outerCount
         );
 
-      outerPetals.castShadow = true;
-      outerPetals.receiveShadow = true;
 
-
-      const dummy =
-        new THREE.Object3D();
+      outerPetals.castShadow =
+        true;
 
 
       for (
@@ -643,45 +782,66 @@
       ) {
 
         const angle =
-          (i / outerCount) *
+          (
+            i /
+            outerCount
+          ) *
           Math.PI *
           2;
 
 
-        // Gives each petal a tiny natural irregularity
         const variation =
           Math.sin(
             i * 8.71
-          ) * 0.04;
+          ) *
+          0.035;
 
 
         const distance =
           radius *
-          (0.72 + variation);
+          (
+            0.73 +
+            variation
+          );
 
 
         dummy.position.set(
-          Math.sin(angle) * distance,
-          Math.cos(angle) * distance,
-          -0.025 + Math.sin(i * 3.1) * 0.018
+          Math.sin(angle) *
+            distance,
+
+          Math.cos(angle) *
+            distance,
+
+          -0.03
         );
 
 
         dummy.rotation.set(
-          Math.sin(i * 1.7) * 0.06,
-          Math.cos(i * 0.9) * 0.05,
+          Math.sin(i) *
+            0.045,
+
+          Math.cos(i) *
+            0.035,
+
           -angle
         );
 
 
         dummy.scale.set(
-          radius * (0.16 + variation * 0.2),
-          radius * (0.47 + variation),
+          radius * 0.16,
+
+          radius *
+            (
+              0.46 +
+              variation
+            ),
+
           radius * 0.055
         );
 
 
         dummy.updateMatrix();
+
 
         outerPetals.setMatrixAt(
           i,
@@ -690,27 +850,25 @@
       }
 
 
-      outerPetals.instanceMatrix.needsUpdate =
-        true;
+      flower.add(
+        outerPetals
+      );
 
-      flower.add(outerPetals);
 
+      /*
+        INNER PETALS
+      */
 
-      // ----------------------------------------------------------
-      // INNER PETALS
-      // ----------------------------------------------------------
+      const innerCount =
+        20;
 
-      const innerCount = 20;
 
       const innerPetals =
         new THREE.InstancedMesh(
           petalGeometry,
-          petalMaterialInner,
+          innerPetalMaterial,
           innerCount
         );
-
-
-      innerPetals.castShadow = true;
 
 
       for (
@@ -720,45 +878,52 @@
       ) {
 
         const angle =
-          (i / innerCount) *
+          (
+            i /
+            innerCount
+          ) *
           Math.PI *
           2 +
-          0.13;
-
-
-        const variation =
-          Math.sin(
-            i * 4.91
-          ) * 0.025;
+          0.12;
 
 
         const distance =
           radius *
-          (0.56 + variation);
+          0.56;
 
 
         dummy.position.set(
-          Math.sin(angle) * distance,
-          Math.cos(angle) * distance,
-          0.005
+          Math.sin(angle) *
+            distance,
+
+          Math.cos(angle) *
+            distance,
+
+          0
         );
 
 
         dummy.rotation.set(
-          0.02,
+          0,
           0,
           -angle
         );
 
 
         dummy.scale.set(
-          radius * 0.145,
-          radius * (0.36 + variation),
-          radius * 0.06
+          radius *
+            0.145,
+
+          radius *
+            0.35,
+
+          radius *
+            0.06
         );
 
 
         dummy.updateMatrix();
+
 
         innerPetals.setMatrixAt(
           i,
@@ -767,15 +932,14 @@
       }
 
 
-      innerPetals.instanceMatrix.needsUpdate =
-        true;
+      flower.add(
+        innerPetals
+      );
 
-      flower.add(innerPetals);
 
-
-      // ----------------------------------------------------------
-      // DARK SUNFLOWER CENTER
-      // ----------------------------------------------------------
+      /*
+        CENTER
+      */
 
       const center =
         new THREE.Mesh(
@@ -785,27 +949,28 @@
 
 
       center.scale.set(
-        radius * 0.53,
-        radius * 0.53,
-        radius * 0.16
+        radius * 0.51,
+        radius * 0.51,
+        radius * 0.17
       );
 
 
       center.position.z =
-        radius * 0.04;
+        radius * 0.045;
 
 
-      center.castShadow = true;
-      center.receiveShadow = true;
+      flower.add(
+        center
+      );
 
-      flower.add(center);
 
+      /*
+        SEEDS
+      */
 
-      // ----------------------------------------------------------
-      // GOLDEN-SPIRAL SEEDS
-      // ----------------------------------------------------------
+      const seedCount =
+        66;
 
-      const seedCount = 64;
 
       const seeds =
         new THREE.InstancedMesh(
@@ -817,7 +982,10 @@
 
       const goldenAngle =
         Math.PI *
-        (3 - Math.sqrt(5));
+        (
+          3 -
+          Math.sqrt(5)
+        );
 
 
       for (
@@ -827,50 +995,50 @@
       ) {
 
         const normalized =
-          (i + 0.5) /
+          (
+            i +
+            0.5
+          ) /
           seedCount;
 
 
         const r =
-          Math.sqrt(normalized) *
+          Math.sqrt(
+            normalized
+          ) *
           radius *
-          0.45;
+          0.43;
 
 
-        const theta =
+        const angle =
           i *
           goldenAngle;
 
 
         dummy.position.set(
-          Math.cos(theta) * r,
-          Math.sin(theta) * r,
-          radius * 0.185
-        );
+          Math.cos(angle) *
+            r,
 
+          Math.sin(angle) *
+            r,
 
-        const seedSize =
           radius *
-          (
-            0.023 +
-            Math.sin(i * 4.3) *
-            0.003
-          );
+            0.19
+        );
 
 
         dummy.scale.setScalar(
-          seedSize
+          radius *
+            0.025
         );
 
 
-        dummy.rotation.set(
-          theta * 0.15,
-          theta * 0.09,
-          theta
-        );
+        dummy.rotation.z =
+          angle;
 
 
         dummy.updateMatrix();
+
 
         seeds.setMatrixAt(
           i,
@@ -879,21 +1047,16 @@
       }
 
 
-      seeds.instanceMatrix.needsUpdate =
-        true;
-
-      flower.add(seeds);
+      flower.add(
+        seeds
+      );
 
 
       return flower;
     }
 
 
-    // ============================================================
-    // STEM BETWEEN TWO 3D POINTS
-    // ============================================================
-
-    const upVector =
+    const up =
       new THREE.Vector3(
         0,
         1,
@@ -909,7 +1072,10 @@
 
       const direction =
         new THREE.Vector3()
-          .subVectors(to, from);
+          .subVectors(
+            to,
+            from
+          );
 
 
       const length =
@@ -938,22 +1104,16 @@
 
       stem.quaternion
         .setFromUnitVectors(
-          upVector,
+          up,
           direction
             .clone()
             .normalize()
         );
 
 
-      stem.castShadow = true;
-
       return stem;
     }
 
-
-    // ============================================================
-    // LEAF
-    // ============================================================
 
     function createLeaf(
       position,
@@ -969,18 +1129,20 @@
         );
 
 
-      leaf.position.copy(position);
+      leaf.position.copy(
+        position
+      );
 
 
       leaf.position.x +=
         side *
-        0.16 *
+        0.18 *
         size;
 
 
       leaf.scale.set(
-        0.19 * size,
-        0.55 * size,
+        0.18 * size,
+        0.56 * size,
         0.045 * size
       );
 
@@ -998,102 +1160,76 @@
         0.17;
 
 
-      leaf.rotation.y =
-        twist *
-        0.8;
-
-
-      leaf.castShadow = true;
-
       return leaf;
     }
 
 
-    // ============================================================
-    // FLOWER POSITIONS
-    // ============================================================
-
     const flowers = [
 
       {
-        x: -1.33,
-        y: 1.75,
+        x: -1.30,
+        y: 1.76,
         z: -0.15,
         size: 0.88,
-        rx: -0.03,
-        ry: -0.14,
         rz: -0.18
       },
 
       {
-        x: -0.58,
-        y: 2.56,
-        z: 0.00,
+        x: -0.63,
+        y: 2.55,
+        z: 0,
         size: 0.94,
-        rx: 0.04,
-        ry: -0.08,
         rz: -0.08
       },
 
       {
-        x: 0.30,
-        y: 2.72,
-        z: -0.22,
+        x: 0.28,
+        y: 2.74,
+        z: -0.25,
         size: 1.00,
-        rx: -0.04,
-        ry: 0.10,
-        rz: 0.09
+        rz: 0.08
       },
 
       {
-        x: 1.15,
-        y: 1.95,
-        z: 0.05,
+        x: 1.12,
+        y: 1.93,
+        z: 0.03,
         size: 0.90,
-        rx: 0.04,
-        ry: 0.18,
-        rz: 0.18
+        rz: 0.17
       },
 
       {
-        x: -0.85,
+        x: -0.88,
         y: 0.82,
-        z: 0.34,
+        z: 0.31,
         size: 0.78,
-        rx: -0.04,
-        ry: -0.13,
-        rz: -0.14
+        rz: -0.13
       },
 
       {
-        x: 0.12,
+        x: 0.08,
         y: 1.25,
-        z: 0.62,
+        z: 0.61,
         size: 0.91,
-        rx: 0.03,
-        ry: 0,
         rz: 0.03
       },
 
       {
         x: 1.02,
-        y: 0.87,
-        z: 0.30,
+        y: 0.86,
+        z: 0.28,
         size: 0.76,
-        rx: -0.04,
-        ry: 0.15,
-        rz: 0.18
+        rz: 0.17
       }
 
     ];
 
 
-    // Stems converge near the bottom
     const bouquetBase =
       new THREE.Vector3(
         0,
-        -3.25,
-        -0.05
+        -3.18,
+        -0.03
       );
 
 
@@ -1116,185 +1252,143 @@
         );
 
 
-        head.rotation.set(
-          config.rx,
-          config.ry,
-          config.rz
+        head.rotation.z =
+          config.rz;
+
+
+        bouquet.add(
+          head
         );
-
-
-        bouquet.add(head);
 
 
         flowerHeads.push({
           mesh: head,
-          baseRotation:
-            head.rotation.clone(),
+          initial:
+            config.rz,
           phase:
-            index * 0.91
+            index * 0.9
         });
 
 
-        // Stem joins slightly behind center
-        const stemEnd =
+        const top =
           new THREE.Vector3(
             config.x,
-            config.y - 0.05,
-            config.z - 0.17
+            config.y,
+            config.z -
+              0.18
           );
 
 
-        const bottomVariation =
-          new THREE.Vector3(
-            (index - 3) * 0.025,
-            0,
-            Math.sin(index) * 0.03
-          );
-
-
-        const stemStart =
+        const bottom =
           bouquetBase
-            .clone()
-            .add(bottomVariation);
+            .clone();
 
 
-        const stem =
+        bottom.x +=
+          (
+            index -
+            3
+          ) *
+          0.025;
+
+
+        bouquet.add(
           createStem(
-            stemStart,
-            stemEnd,
-            0.045
-          );
+            bottom,
+            top
+          )
+        );
 
 
-        bouquet.add(stem);
-
-
-        // --------------------------------------------------------
-        // Leaves
-        // --------------------------------------------------------
-
-        const leafT =
-          0.38 +
-          (index % 3) *
-          0.09;
-
-
-        const leafPosition =
-          stemStart
+        const leafPoint =
+          bottom
             .clone()
             .lerp(
-              stemEnd,
-              leafT
+              top,
+              0.42 +
+              (
+                index %
+                3
+              ) *
+              0.07
             );
 
 
-        const side =
-          index % 2 === 0
-            ? -1
-            : 1;
-
-
-        const leaf =
+        bouquet.add(
           createLeaf(
-            leafPosition,
-            side,
+            leafPoint,
+
+            index %
+              2 ===
+              0
+              ? -1
+              : 1,
+
             0.85 +
-            (index % 3) * 0.08,
-            Math.sin(index * 3.1) * 0.15
-          );
-
-
-        bouquet.add(leaf);
-
-
-        if (
-          index === 1 ||
-          index === 4 ||
-          index === 6
-        ) {
-
-          const secondPosition =
-            stemStart
-              .clone()
-              .lerp(
-                stemEnd,
-                0.58
-              );
-
-
-          bouquet.add(
-            createLeaf(
-              secondPosition,
-              -side,
-              0.72,
-              -0.12
-            )
-          );
-        }
+              (
+                index %
+                3
+              ) *
+              0.07
+          )
+        );
 
       }
     );
 
 
-    // ============================================================
-    // BOUQUET PAPER WRAPPING
-    // ============================================================
-
-    const wrapperGeometry =
-      new THREE.CylinderGeometry(
-        1.52,
-        0.38,
-        3.25,
-        36,
-        1,
-        true
-      );
-
+    /* ============================================================
+       WRAPPING
+       ============================================================ */
 
     const wrapper =
       new THREE.Mesh(
-        wrapperGeometry,
+
+        new THREE.CylinderGeometry(
+          1.52,
+          0.36,
+          3.2,
+          36,
+          1,
+          true
+        ),
+
         paperMaterial
       );
 
 
     wrapper.position.set(
       0,
-      -1.32,
+      -1.33,
       -0.06
     );
 
 
-    wrapper.rotation.y =
-      -0.15;
+    bouquet.add(
+      wrapper
+    );
 
 
-    bouquet.add(wrapper);
-
-
-    // Second translucent layer
     const wrapperHighlight =
       new THREE.Mesh(
-        wrapperGeometry,
-        paperHighlightMaterial
+        wrapper.geometry,
+        paperLightMaterial
       );
 
 
     wrapperHighlight.position.set(
       0.12,
-      -1.26,
+      -1.27,
       0.02
     );
 
 
     wrapperHighlight.rotation.y =
-      0.45;
+      0.5;
 
 
-    wrapperHighlight.scale.set(
-      0.93,
-      1.02,
-      0.93
+    wrapperHighlight.scale.setScalar(
+      0.94
     );
 
 
@@ -1303,225 +1397,144 @@
     );
 
 
-    // ============================================================
-    // RIBBON
-    // ============================================================
+    /* ============================================================
+       RIBBON
+       ============================================================ */
 
-    const ribbonRing =
+    const ribbon =
       new THREE.Mesh(
+
         new THREE.TorusGeometry(
-          0.43,
-          0.055,
+          0.42,
+          0.05,
           10,
           40
         ),
+
         ribbonMaterial
       );
 
 
-    ribbonRing.position.set(
+    ribbon.position.set(
       0,
-      -1.77,
-      0
+      -1.76,
+      0.05
     );
 
 
-    ribbonRing.rotation.x =
-      Math.PI / 2;
+    ribbon.rotation.x =
+      Math.PI /
+      2;
 
 
-    bouquet.add(ribbonRing);
+    bouquet.add(
+      ribbon
+    );
 
 
     const ribbonTailGeometry =
       new THREE.BoxGeometry(
-        0.1,
-        0.94,
+        0.09,
+        0.95,
         0.035
       );
 
 
-    const tailOne =
+    const ribbonLeft =
       new THREE.Mesh(
         ribbonTailGeometry,
         ribbonMaterial
       );
 
 
-    tailOne.position.set(
+    ribbonLeft.position.set(
       -0.14,
-      -2.17,
+      -2.15,
       0.14
     );
 
 
-    tailOne.rotation.z =
-      0.18;
+    ribbonLeft.rotation.z =
+      0.2;
 
 
-    tailOne.rotation.x =
-      -0.12;
+    bouquet.add(
+      ribbonLeft
+    );
 
 
-    bouquet.add(tailOne);
-
-
-    const tailTwo =
+    const ribbonRight =
       new THREE.Mesh(
         ribbonTailGeometry,
         ribbonMaterial
       );
 
 
-    tailTwo.position.set(
+    ribbonRight.position.set(
       0.14,
-      -2.17,
-      0.10
+      -2.15,
+      0.12
     );
 
 
-    tailTwo.rotation.z =
+    ribbonRight.rotation.z =
       -0.22;
 
 
-    tailTwo.rotation.x =
-      0.1;
-
-
-    bouquet.add(tailTwo);
-
-
-    // ============================================================
-    // FLOATING DUST / LIGHT PARTICLES
-    // ============================================================
-
-    const particleCount = 90;
-
-    const particlePositions =
-      new Float32Array(
-        particleCount * 3
-      );
-
-
-    for (
-      let i = 0;
-      i < particleCount;
-      i++
-    ) {
-
-      particlePositions[
-        i * 3
-      ] =
-        (
-          Math.random() -
-          0.5
-        ) * 12;
-
-
-      particlePositions[
-        i * 3 + 1
-      ] =
-        (
-          Math.random() -
-          0.5
-        ) * 8;
-
-
-      particlePositions[
-        i * 3 + 2
-      ] =
-        (
-          Math.random() -
-          0.5
-        ) * 5;
-    }
-
-
-    const particleGeometry =
-      new THREE.BufferGeometry();
-
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        particlePositions,
-        3
-      )
+    bouquet.add(
+      ribbonRight
     );
 
 
-    const particleMaterial =
-      new THREE.PointsMaterial({
-        color: 0xffe8a8,
-        size: 0.025,
-        transparent: true,
-        opacity: 0.45,
-        depthWrite: false
-      });
-
-
-    const particles =
-      new THREE.Points(
-        particleGeometry,
-        particleMaterial
-      );
-
-
-    scene.add(particles);
-
-
-    // ============================================================
-    // POINTER PARALLAX
-    // ============================================================
-
-    let pointerX = 0;
-    let pointerY = 0;
+    /* ============================================================
+       MOUSE MOVEMENT
+       ============================================================ */
 
     let targetX = 0;
     let targetY = 0;
 
-
-    const reducedMotion =
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      );
+    let currentX = 0;
+    let currentY = 0;
 
 
     window.addEventListener(
       "pointermove",
       event => {
 
-        // Don't use touch dragging for the scene.
-        // This leaves phone scrolling comfortable.
         if (
-          event.pointerType === "touch"
+          event.pointerType ===
+          "touch"
         ) {
           return;
         }
 
 
-        pointerX =
+        const x =
           (
             event.clientX /
             window.innerWidth
-          ) * 2 - 1;
+          ) *
+          2 -
+          1;
 
 
-        pointerY =
+        const y =
           (
             event.clientY /
             window.innerHeight
-          ) * 2 - 1;
+          ) *
+          2 -
+          1;
 
 
         targetX =
-          pointerY *
-          0.055;
+          y *
+          0.045;
 
 
         targetY =
-          pointerX *
-          0.13;
+          x *
+          0.11;
 
       },
       {
@@ -1530,29 +1543,34 @@
     );
 
 
-    // ============================================================
-    // RESPONSIVE 3D POSITIONING
-    // ============================================================
+    /* ============================================================
+       RESPONSIVE THREE.JS
+       ============================================================ */
 
-    function updateLayout() {
+    function resizeThreeScene() {
+
+      const rect =
+        flowerArea
+          .getBoundingClientRect();
+
 
       const width =
-        window.innerWidth;
+        Math.max(
+          rect.width,
+          1
+        );
+
 
       const height =
-        window.innerHeight;
+        Math.max(
+          rect.height,
+          1
+        );
 
 
       const mobile =
-        width <= 760;
-
-
-      camera.aspect =
-        width /
-        height;
-
-
-      camera.updateProjectionMatrix();
+        window.innerWidth <=
+        700;
 
 
       renderer.setSize(
@@ -1565,29 +1583,44 @@
       renderer.setPixelRatio(
         Math.min(
           window.devicePixelRatio,
-          mobile ? 1.5 : 1.8
+          mobile
+            ? 1.35
+            : 1.8
         )
       );
 
+
+      camera.aspect =
+        width /
+        height;
+
+
+      camera.updateProjectionMatrix();
+
+
+      /*
+        IMPORTANT:
+        These values are different on mobile.
+      */
 
       if (mobile) {
 
         camera.position.set(
           0,
-          0,
-          11
+          0.15,
+          12
         );
 
 
         bouquet.position.set(
           0,
-          1.45,
+          -0.15,
           0
         );
 
 
         bouquet.scale.setScalar(
-          0.72
+          0.70
         );
 
       } else {
@@ -1595,13 +1628,13 @@
         camera.position.set(
           0,
           0,
-          10.5
+          10.6
         );
 
 
         bouquet.position.set(
-          -1.72,
-          -0.05,
+          0,
+          -0.08,
           0
         );
 
@@ -1618,32 +1651,33 @@
         0,
         0
       );
-
     }
-
-
-    updateLayout();
 
 
     window.addEventListener(
       "resize",
-      updateLayout
+      resizeThreeScene
     );
 
 
-    // ============================================================
-    // ANIMATION
-    // ============================================================
+    resizeThreeScene();
+
+
+    /* ============================================================
+       THREE.JS ANIMATION
+       ============================================================ */
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
 
     const clock =
       new THREE.Clock();
 
 
-    let currentRotX = 0;
-    let currentRotY = 0;
-
-
-    function animate() {
+    function animateThree() {
 
       const time =
         clock.getElapsedTime();
@@ -1653,40 +1687,45 @@
         !reducedMotion.matches
       ) {
 
-        currentRotX =
+        currentX =
           THREE.MathUtils.lerp(
-            currentRotX,
+            currentX,
             targetX,
             0.025
           );
 
 
-        currentRotY =
+        currentY =
           THREE.MathUtils.lerp(
-            currentRotY,
+            currentY,
             targetY,
             0.025
           );
 
 
         bouquet.rotation.x =
-          currentRotX +
-          Math.sin(time * 0.42) *
-          0.008;
+          currentX +
+          Math.sin(
+            time * 0.42
+          ) *
+          0.007;
 
 
         bouquet.rotation.y =
-          currentRotY +
-          Math.sin(time * 0.32) *
-          0.025;
+          currentY +
+          Math.sin(
+            time * 0.31
+          ) *
+          0.022;
 
 
         bouquet.rotation.z =
-          Math.sin(time * 0.27) *
-          0.008;
+          Math.sin(
+            time * 0.25
+          ) *
+          0.006;
 
 
-        // Flowers gently move independently
         flowerHeads.forEach(
           (
             flower,
@@ -1694,33 +1733,15 @@
           ) => {
 
             flower.mesh.rotation.z =
-              flower.baseRotation.z +
+              flower.initial +
               Math.sin(
-                time * 0.7 +
+                time * 0.62 +
                 flower.phase
               ) *
-              0.012;
-
-
-            flower.mesh.rotation.x =
-              flower.baseRotation.x +
-              Math.sin(
-                time * 0.53 +
-                index
-              ) *
-              0.006;
+              0.011;
 
           }
         );
-
-
-        particles.rotation.y =
-          time * 0.012;
-
-
-        particles.position.y =
-          Math.sin(time * 0.25) *
-          0.06;
 
       }
 
@@ -1732,13 +1753,523 @@
 
 
       requestAnimationFrame(
-        animate
+        animateThree
       );
-
     }
 
 
-    animate();
+    animateThree();
+
+
+    /* ============================================================
+       FIREWORKS
+       ============================================================ */
+
+    const fireCanvas =
+      document.querySelector(
+        "#fireworks"
+      );
+
+
+    const ctx =
+      fireCanvas.getContext(
+        "2d"
+      );
+
+
+    let fireWidth = 0;
+    let fireHeight = 0;
+
+
+    const particles = [];
+
+    const stars = [];
+
+
+    function resizeFireworks() {
+
+      const dpr =
+        Math.min(
+          window.devicePixelRatio,
+          1.5
+        );
+
+
+      fireWidth =
+        window.innerWidth;
+
+
+      fireHeight =
+        window.innerHeight;
+
+
+      fireCanvas.width =
+        fireWidth *
+        dpr;
+
+
+      fireCanvas.height =
+        fireHeight *
+        dpr;
+
+
+      fireCanvas.style.width =
+        fireWidth +
+        "px";
+
+
+      fireCanvas.style.height =
+        fireHeight +
+        "px";
+
+
+      ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+      );
+
+
+      createStars();
+    }
+
+
+    function createStars() {
+
+      stars.length = 0;
+
+
+      const amount =
+        Math.min(
+          95,
+          Math.floor(
+            fireWidth /
+            11
+          )
+        );
+
+
+      for (
+        let i = 0;
+        i < amount;
+        i++
+      ) {
+
+        stars.push({
+
+          x:
+            Math.random() *
+            fireWidth,
+
+          y:
+            Math.random() *
+            fireHeight,
+
+          radius:
+            Math.random() *
+            0.8 +
+            0.15,
+
+          alpha:
+            Math.random() *
+            0.4 +
+            0.08
+
+        });
+      }
+    }
+
+
+    window.addEventListener(
+      "resize",
+      resizeFireworks
+    );
+
+
+    resizeFireworks();
+
+
+    /*
+      Warm colour palette so it matches the sunflowers.
+    */
+
+    const fireworkColors = [
+
+      [255, 220, 126],
+
+      [255, 244, 210],
+
+      [255, 185, 74],
+
+      [255, 211, 105],
+
+      [255, 153, 90]
+
+    ];
+
+
+    function createFirework(
+      x,
+      y,
+      amount = 48
+    ) {
+
+      const color =
+        fireworkColors[
+          Math.floor(
+            Math.random() *
+            fireworkColors.length
+          )
+        ];
+
+
+      for (
+        let i = 0;
+        i < amount;
+        i++
+      ) {
+
+        const angle =
+          Math.random() *
+          Math.PI *
+          2;
+
+
+        const speed =
+          Math.random() *
+          2.6 +
+          0.7;
+
+
+        particles.push({
+
+          x,
+          y,
+
+          vx:
+            Math.cos(angle) *
+            speed,
+
+          vy:
+            Math.sin(angle) *
+            speed,
+
+          life:
+            Math.random() *
+            32 +
+            45,
+
+          maxLife:
+            77,
+
+          gravity:
+            0.018,
+
+          friction:
+            0.985,
+
+          size:
+            Math.random() *
+            1.4 +
+            0.35,
+
+          color
+
+        });
+      }
+    }
+
+
+    function randomFirework() {
+
+      /*
+        Keep fireworks mostly near edges so
+        they don't destroy readability.
+      */
+
+      const leftSide =
+        Math.random() <
+        0.5;
+
+
+      const x =
+        leftSide
+
+          ? fireWidth *
+            (
+              0.04 +
+              Math.random() *
+              0.24
+            )
+
+          : fireWidth *
+            (
+              0.72 +
+              Math.random() *
+              0.23
+            );
+
+
+      const y =
+        fireHeight *
+        (
+          0.08 +
+          Math.random() *
+          0.47
+        );
+
+
+      createFirework(
+        x,
+        y,
+
+        window.innerWidth <=
+          700
+
+          ? 32
+
+          : 48
+      );
+    }
+
+
+    let nextFirework =
+      performance.now() +
+      1000;
+
+
+    function animateFireworks(
+      now
+    ) {
+
+      ctx.clearRect(
+        0,
+        0,
+        fireWidth,
+        fireHeight
+      );
+
+
+      /*
+        Tiny background stars
+      */
+
+      for (
+        const star of stars
+      ) {
+
+        ctx.beginPath();
+
+        ctx.arc(
+          star.x,
+          star.y,
+          star.radius,
+          0,
+          Math.PI * 2
+        );
+
+
+        ctx.fillStyle =
+          `rgba(
+            255,
+            226,
+            150,
+            ${star.alpha}
+          )`;
+
+
+        ctx.fill();
+      }
+
+
+      if (
+        !reducedMotion.matches &&
+        now >
+          nextFirework
+      ) {
+
+        randomFirework();
+
+
+        nextFirework =
+          now +
+          1600 +
+          Math.random() *
+          1700;
+      }
+
+
+      for (
+        let i =
+          particles.length -
+          1;
+
+        i >= 0;
+
+        i--
+      ) {
+
+        const p =
+          particles[i];
+
+
+        p.vx *=
+          p.friction;
+
+
+        p.vy *=
+          p.friction;
+
+
+        p.vy +=
+          p.gravity;
+
+
+        p.x +=
+          p.vx;
+
+
+        p.y +=
+          p.vy;
+
+
+        p.life--;
+
+
+        const alpha =
+          Math.max(
+            0,
+            p.life /
+            p.maxLife
+          );
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+          p.x,
+          p.y,
+          p.size,
+          0,
+          Math.PI *
+          2
+        );
+
+
+        ctx.fillStyle =
+          `rgba(
+            ${p.color[0]},
+            ${p.color[1]},
+            ${p.color[2]},
+            ${alpha * 0.7}
+          )`;
+
+
+        ctx.fill();
+
+
+        /*
+          Firework trail
+        */
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          p.x,
+          p.y
+        );
+
+
+        ctx.lineTo(
+          p.x -
+          p.vx *
+          3,
+
+          p.y -
+          p.vy *
+          3
+        );
+
+
+        ctx.strokeStyle =
+          `rgba(
+            ${p.color[0]},
+            ${p.color[1]},
+            ${p.color[2]},
+            ${alpha * 0.22}
+          )`;
+
+
+        ctx.lineWidth =
+          Math.max(
+            0.3,
+            p.size *
+            0.5
+          );
+
+
+        ctx.stroke();
+
+
+        if (
+          p.life <= 0
+        ) {
+
+          particles.splice(
+            i,
+            1
+          );
+        }
+      }
+
+
+      requestAnimationFrame(
+        animateFireworks
+      );
+    }
+
+
+    requestAnimationFrame(
+      animateFireworks
+    );
+
+
+    /*
+      Clicking / tapping creates a firework.
+    */
+
+    window.addEventListener(
+      "pointerdown",
+      event => {
+
+        if (
+          reducedMotion.matches
+        ) {
+          return;
+        }
+
+
+        createFirework(
+          event.clientX,
+          event.clientY,
+
+          window.innerWidth <=
+            700
+
+            ? 30
+
+            : 44
+        );
+
+      },
+      {
+        passive: true
+      }
+    );
 
   </script>
 
