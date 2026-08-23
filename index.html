@@ -1,26 +1,1746 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Valentine?</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <meta name="theme-color" content="#080b08" />
+
+  <title>卿卿生辰喜乐</title>
+
+  <style>
+    :root {
+      --text: rgba(255, 255, 255, 0.96);
+      --muted: rgba(255, 255, 255, 0.48);
+      --gold: rgba(255, 215, 100, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100svh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(
+          circle at 28% 38%,
+          rgba(52, 67, 38, 0.28),
+          transparent 33%
+        ),
+        radial-gradient(
+          circle at 75% 40%,
+          rgba(100, 74, 28, 0.08),
+          transparent 35%
+        ),
+        linear-gradient(
+          145deg,
+          #101510 0%,
+          #080b08 52%,
+          #050605 100%
+        );
+
+      color: var(--text);
+      font-family:
+        "Songti SC",
+        "Noto Serif CJK SC",
+        "STSong",
+        "SimSun",
+        serif;
+    }
+
+    /* Three.js canvas */
+    #scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+
+      width: 100%;
+      height: 100%;
+
+      display: block;
+      outline: none;
+
+      touch-action: pan-y;
+    }
+
+    /* Soft vignette */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.18) 78%,
+          rgba(0, 0, 0, 0.42) 100%
+        );
+    }
+
+    /* subtle glow behind poem */
+    .poem-glow {
+      position: fixed;
+      z-index: 1;
+      top: 50%;
+      right: 2vw;
+
+      width: 42vw;
+      height: 75vh;
+
+      transform: translateY(-50%);
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(255, 210, 105, 0.055),
+          transparent 65%
+        );
+
+      filter: blur(30px);
+    }
+
+    .poem {
+      position: fixed;
+      z-index: 2;
+
+      top: 50%;
+      right: clamp(32px, 7vw, 120px);
+
+      width: min(36vw, 520px);
+
+      transform: translateY(-50%);
+
+      text-align: left;
+
+      color: var(--text);
+
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.5),
+        0 0 26px rgba(255, 235, 180, 0.05);
+
+      user-select: text;
+    }
+
+    .poem::before {
+      content: "";
+
+      display: block;
+
+      width: 34px;
+      height: 1px;
+
+      margin-bottom: 25px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255, 221, 130, 0.9),
+          rgba(255, 221, 130, 0)
+        );
+    }
+
+    .poem p {
+      margin: 0 0 24px;
+
+      font-size: clamp(17px, 1.35vw, 23px);
+      line-height: 2;
+
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+
+    .poem p:last-child {
+      margin-bottom: 0;
+    }
+
+    .poem .ending {
+      color: #fff;
+
+      text-shadow:
+        0 0 18px rgba(255, 225, 130, 0.12),
+        0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .interaction-hint {
+      position: fixed;
+      z-index: 2;
+
+      left: 34px;
+      bottom: 25px;
+
+      color: var(--muted);
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+
+      pointer-events: none;
+
+      transition: opacity 1s ease;
+    }
+
+    noscript {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+
+      display: grid;
+      place-items: center;
+
+      color: white;
+      background: #080b08;
+
+      padding: 30px;
+      text-align: center;
+    }
+
+    /* -----------------------------------
+       MOBILE
+       ----------------------------------- */
+
+    @media (max-width: 760px) {
+      body {
+        min-height: 100svh;
+      }
+
+      .poem-glow {
+        top: auto;
+        bottom: 0;
+        right: 0;
+
+        width: 100%;
+        height: 55svh;
+
+        transform: none;
+      }
+
+      .poem {
+        position: relative;
+
+        top: auto;
+        right: auto;
+
+        width: auto;
+
+        transform: none;
+
+        margin-top: 51svh;
+
+        padding:
+          26px
+          max(22px, env(safe-area-inset-right))
+          max(40px, calc(env(safe-area-inset-bottom) + 24px))
+          max(22px, env(safe-area-inset-left));
+
+        text-align: center;
+      }
+
+      .poem::before {
+        margin: 0 auto 20px;
+
+        background:
+          linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 221, 130, 0.8),
+            transparent
+          );
+      }
+
+      .poem p {
+        margin-bottom: 19px;
+
+        font-size: clamp(14px, 4vw, 18px);
+        line-height: 1.88;
+
+        letter-spacing: 0.06em;
+      }
+
+      .interaction-hint {
+        display: none;
+      }
+
+      .vignette {
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.02),
+            transparent 35%,
+            rgba(0, 0, 0, 0.12) 65%,
+            rgba(0, 0, 0, 0.35)
+          );
+      }
+    }
+
+    @media (max-width: 380px) {
+      .poem p {
+        font-size: 14px;
+        line-height: 1.75;
+      }
+    }
+
+    @media (max-width: 760px) and (max-height: 700px) {
+      .poem {
+        margin-top: 48svh;
+      }
+
+      .poem p {
+        margin-bottom: 14px;
+        font-size: 13px;
+        line-height: 1.62;
+      }
+    }
+
+    /* Respect accessibility preference */
+    @media (prefers-reduced-motion: reduce) {
+      .interaction-hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body class="bg">
-  <div class="hearts" aria-hidden="true"></div>
-   
-  <main class="center-card">
-     <img src="3-mochi-cat-peach-goma.gif">
-    <h1 class="main-title"><b>Will You be My Valentine?</b></h1>
-    <p class="sub">No pressure. But if you don't wanna thats fine too I guess..</p>
 
-    <div class="btn-row">
-      <a class="btn btn-yes" href="dinner.html">Yes</a>
-      <button class="btn btn-no" id="noBtn" type="button">No</button>
-    </div>
+<body>
 
+  <canvas
+    id="scene"
+    aria-hidden="true"
+  ></canvas>
+
+  <div class="vignette"></div>
+  <div class="poem-glow"></div>
+
+  <main class="poem" aria-label="生辰祝诗">
+    <p>
+      愿卿长似花初绽，<br />
+      无忧无恙少尘埃。<br />
+      年年今日同相守，<br />
+      共看灯火照楼台。
+    </p>
+
+    <p>
+      若问此心何所愿，<br />
+      唯愿卿安，唯愿卿欢；<br />
+      春秋与共，白首不改。
+    </p>
+
+    <p class="ending">
+      卿卿生辰喜乐，<br />
+      愿岁岁长安，年年有我。
+    </p>
   </main>
 
-  <script src="script.js"></script>
+  <div class="interaction-hint">
+    move to admire the flowers
+  </div>
+
+  <noscript>
+    此页面需要启用 JavaScript 才能显示花束。
+  </noscript>
+
+
+  <script type="module">
+
+    import * as THREE from
+      "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js";
+
+
+    // ============================================================
+    // BASIC THREE.JS SETUP
+    // ============================================================
+
+    const canvas = document.querySelector("#scene");
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      42,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+
+    camera.position.set(0, 0, 10.5);
+
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance"
+    });
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 1.8)
+    );
+
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    renderer.toneMapping =
+      THREE.ACESFilmicToneMapping;
+
+    renderer.toneMappingExposure = 1.05;
+
+    renderer.shadowMap.enabled = true;
+
+    renderer.shadowMap.type =
+      THREE.PCFSoftShadowMap;
+
+
+    // ============================================================
+    // LIGHTING
+    // ============================================================
+
+    const hemisphereLight =
+      new THREE.HemisphereLight(
+        0xfff3ce,
+        0x152015,
+        1.8
+      );
+
+    scene.add(hemisphereLight);
+
+
+    const keyLight =
+      new THREE.DirectionalLight(
+        0xffe6a7,
+        4.2
+      );
+
+    keyLight.position.set(-4, 7, 7);
+
+    keyLight.castShadow = true;
+
+    keyLight.shadow.mapSize.set(1024, 1024);
+
+    scene.add(keyLight);
+
+
+    const fillLight =
+      new THREE.PointLight(
+        0xffc557,
+        25,
+        15,
+        2
+      );
+
+    fillLight.position.set(-3, 1.5, 5);
+
+    scene.add(fillLight);
+
+
+    const rimLight =
+      new THREE.PointLight(
+        0xfff1cb,
+        15,
+        14,
+        2
+      );
+
+    rimLight.position.set(3, 3, -2);
+
+    scene.add(rimLight);
+
+
+    // ============================================================
+    // MATERIALS
+    // ============================================================
+
+    const petalMaterialOuter =
+      new THREE.MeshStandardMaterial({
+        color: 0xffc400,
+        roughness: 0.48,
+        metalness: 0.02
+      });
+
+
+    const petalMaterialInner =
+      new THREE.MeshStandardMaterial({
+        color: 0xffa800,
+        roughness: 0.5,
+        metalness: 0.01
+      });
+
+
+    const centerMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x3a1d0c,
+        roughness: 0.88
+      });
+
+
+    const seedMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x8f5019,
+        roughness: 0.76
+      });
+
+
+    const stemMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x315c2d,
+        roughness: 0.82
+      });
+
+
+    const leafMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0x416f35,
+        roughness: 0.88,
+        side: THREE.DoubleSide
+      });
+
+
+    const paperMaterial =
+      new THREE.MeshPhysicalMaterial({
+        color: 0xd5c09b,
+        roughness: 0.8,
+        transparent: true,
+        opacity: 0.34,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+
+    const paperHighlightMaterial =
+      new THREE.MeshPhysicalMaterial({
+        color: 0xf0dfbd,
+        roughness: 0.9,
+        transparent: true,
+        opacity: 0.18,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+
+    const ribbonMaterial =
+      new THREE.MeshStandardMaterial({
+        color: 0xd0a348,
+        roughness: 0.5
+      });
+
+
+    // ============================================================
+    // SHARED GEOMETRY
+    // Re-using geometry makes the page much faster on phones.
+    // ============================================================
+
+    const petalGeometry =
+      new THREE.SphereGeometry(
+        1,
+        12,
+        8
+      );
+
+
+    const centerGeometry =
+      new THREE.SphereGeometry(
+        1,
+        24,
+        16
+      );
+
+
+    const seedGeometry =
+      new THREE.IcosahedronGeometry(
+        1,
+        0
+      );
+
+
+    const stemGeometry =
+      new THREE.CylinderGeometry(
+        1,
+        1,
+        1,
+        10
+      );
+
+
+    const leafGeometry =
+      new THREE.SphereGeometry(
+        1,
+        14,
+        8
+      );
+
+
+    // ============================================================
+    // MAIN BOUQUET GROUP
+    // ============================================================
+
+    const bouquet =
+      new THREE.Group();
+
+    scene.add(bouquet);
+
+
+    const flowerHeads = [];
+
+
+    // ============================================================
+    // CREATE A SUNFLOWER
+    // ============================================================
+
+    function createSunflower(radius = 1) {
+
+      const flower =
+        new THREE.Group();
+
+
+      // ----------------------------------------------------------
+      // OUTER PETALS
+      // ----------------------------------------------------------
+
+      const outerCount = 26;
+
+      const outerPetals =
+        new THREE.InstancedMesh(
+          petalGeometry,
+          petalMaterialOuter,
+          outerCount
+        );
+
+      outerPetals.castShadow = true;
+      outerPetals.receiveShadow = true;
+
+
+      const dummy =
+        new THREE.Object3D();
+
+
+      for (
+        let i = 0;
+        i < outerCount;
+        i++
+      ) {
+
+        const angle =
+          (i / outerCount) *
+          Math.PI *
+          2;
+
+
+        // Gives each petal a tiny natural irregularity
+        const variation =
+          Math.sin(
+            i * 8.71
+          ) * 0.04;
+
+
+        const distance =
+          radius *
+          (0.72 + variation);
+
+
+        dummy.position.set(
+          Math.sin(angle) * distance,
+          Math.cos(angle) * distance,
+          -0.025 + Math.sin(i * 3.1) * 0.018
+        );
+
+
+        dummy.rotation.set(
+          Math.sin(i * 1.7) * 0.06,
+          Math.cos(i * 0.9) * 0.05,
+          -angle
+        );
+
+
+        dummy.scale.set(
+          radius * (0.16 + variation * 0.2),
+          radius * (0.47 + variation),
+          radius * 0.055
+        );
+
+
+        dummy.updateMatrix();
+
+        outerPetals.setMatrixAt(
+          i,
+          dummy.matrix
+        );
+      }
+
+
+      outerPetals.instanceMatrix.needsUpdate =
+        true;
+
+      flower.add(outerPetals);
+
+
+      // ----------------------------------------------------------
+      // INNER PETALS
+      // ----------------------------------------------------------
+
+      const innerCount = 20;
+
+      const innerPetals =
+        new THREE.InstancedMesh(
+          petalGeometry,
+          petalMaterialInner,
+          innerCount
+        );
+
+
+      innerPetals.castShadow = true;
+
+
+      for (
+        let i = 0;
+        i < innerCount;
+        i++
+      ) {
+
+        const angle =
+          (i / innerCount) *
+          Math.PI *
+          2 +
+          0.13;
+
+
+        const variation =
+          Math.sin(
+            i * 4.91
+          ) * 0.025;
+
+
+        const distance =
+          radius *
+          (0.56 + variation);
+
+
+        dummy.position.set(
+          Math.sin(angle) * distance,
+          Math.cos(angle) * distance,
+          0.005
+        );
+
+
+        dummy.rotation.set(
+          0.02,
+          0,
+          -angle
+        );
+
+
+        dummy.scale.set(
+          radius * 0.145,
+          radius * (0.36 + variation),
+          radius * 0.06
+        );
+
+
+        dummy.updateMatrix();
+
+        innerPetals.setMatrixAt(
+          i,
+          dummy.matrix
+        );
+      }
+
+
+      innerPetals.instanceMatrix.needsUpdate =
+        true;
+
+      flower.add(innerPetals);
+
+
+      // ----------------------------------------------------------
+      // DARK SUNFLOWER CENTER
+      // ----------------------------------------------------------
+
+      const center =
+        new THREE.Mesh(
+          centerGeometry,
+          centerMaterial
+        );
+
+
+      center.scale.set(
+        radius * 0.53,
+        radius * 0.53,
+        radius * 0.16
+      );
+
+
+      center.position.z =
+        radius * 0.04;
+
+
+      center.castShadow = true;
+      center.receiveShadow = true;
+
+      flower.add(center);
+
+
+      // ----------------------------------------------------------
+      // GOLDEN-SPIRAL SEEDS
+      // ----------------------------------------------------------
+
+      const seedCount = 64;
+
+      const seeds =
+        new THREE.InstancedMesh(
+          seedGeometry,
+          seedMaterial,
+          seedCount
+        );
+
+
+      const goldenAngle =
+        Math.PI *
+        (3 - Math.sqrt(5));
+
+
+      for (
+        let i = 0;
+        i < seedCount;
+        i++
+      ) {
+
+        const normalized =
+          (i + 0.5) /
+          seedCount;
+
+
+        const r =
+          Math.sqrt(normalized) *
+          radius *
+          0.45;
+
+
+        const theta =
+          i *
+          goldenAngle;
+
+
+        dummy.position.set(
+          Math.cos(theta) * r,
+          Math.sin(theta) * r,
+          radius * 0.185
+        );
+
+
+        const seedSize =
+          radius *
+          (
+            0.023 +
+            Math.sin(i * 4.3) *
+            0.003
+          );
+
+
+        dummy.scale.setScalar(
+          seedSize
+        );
+
+
+        dummy.rotation.set(
+          theta * 0.15,
+          theta * 0.09,
+          theta
+        );
+
+
+        dummy.updateMatrix();
+
+        seeds.setMatrixAt(
+          i,
+          dummy.matrix
+        );
+      }
+
+
+      seeds.instanceMatrix.needsUpdate =
+        true;
+
+      flower.add(seeds);
+
+
+      return flower;
+    }
+
+
+    // ============================================================
+    // STEM BETWEEN TWO 3D POINTS
+    // ============================================================
+
+    const upVector =
+      new THREE.Vector3(
+        0,
+        1,
+        0
+      );
+
+
+    function createStem(
+      from,
+      to,
+      thickness = 0.045
+    ) {
+
+      const direction =
+        new THREE.Vector3()
+          .subVectors(to, from);
+
+
+      const length =
+        direction.length();
+
+
+      const stem =
+        new THREE.Mesh(
+          stemGeometry,
+          stemMaterial
+        );
+
+
+      stem.position
+        .copy(from)
+        .add(to)
+        .multiplyScalar(0.5);
+
+
+      stem.scale.set(
+        thickness,
+        length,
+        thickness
+      );
+
+
+      stem.quaternion
+        .setFromUnitVectors(
+          upVector,
+          direction
+            .clone()
+            .normalize()
+        );
+
+
+      stem.castShadow = true;
+
+      return stem;
+    }
+
+
+    // ============================================================
+    // LEAF
+    // ============================================================
+
+    function createLeaf(
+      position,
+      side,
+      size = 1,
+      twist = 0
+    ) {
+
+      const leaf =
+        new THREE.Mesh(
+          leafGeometry,
+          leafMaterial
+        );
+
+
+      leaf.position.copy(position);
+
+
+      leaf.position.x +=
+        side *
+        0.16 *
+        size;
+
+
+      leaf.scale.set(
+        0.19 * size,
+        0.55 * size,
+        0.045 * size
+      );
+
+
+      leaf.rotation.z =
+        side *
+        (
+          0.85 +
+          twist
+        );
+
+
+      leaf.rotation.x =
+        side *
+        0.17;
+
+
+      leaf.rotation.y =
+        twist *
+        0.8;
+
+
+      leaf.castShadow = true;
+
+      return leaf;
+    }
+
+
+    // ============================================================
+    // FLOWER POSITIONS
+    // ============================================================
+
+    const flowers = [
+
+      {
+        x: -1.33,
+        y: 1.75,
+        z: -0.15,
+        size: 0.88,
+        rx: -0.03,
+        ry: -0.14,
+        rz: -0.18
+      },
+
+      {
+        x: -0.58,
+        y: 2.56,
+        z: 0.00,
+        size: 0.94,
+        rx: 0.04,
+        ry: -0.08,
+        rz: -0.08
+      },
+
+      {
+        x: 0.30,
+        y: 2.72,
+        z: -0.22,
+        size: 1.00,
+        rx: -0.04,
+        ry: 0.10,
+        rz: 0.09
+      },
+
+      {
+        x: 1.15,
+        y: 1.95,
+        z: 0.05,
+        size: 0.90,
+        rx: 0.04,
+        ry: 0.18,
+        rz: 0.18
+      },
+
+      {
+        x: -0.85,
+        y: 0.82,
+        z: 0.34,
+        size: 0.78,
+        rx: -0.04,
+        ry: -0.13,
+        rz: -0.14
+      },
+
+      {
+        x: 0.12,
+        y: 1.25,
+        z: 0.62,
+        size: 0.91,
+        rx: 0.03,
+        ry: 0,
+        rz: 0.03
+      },
+
+      {
+        x: 1.02,
+        y: 0.87,
+        z: 0.30,
+        size: 0.76,
+        rx: -0.04,
+        ry: 0.15,
+        rz: 0.18
+      }
+
+    ];
+
+
+    // Stems converge near the bottom
+    const bouquetBase =
+      new THREE.Vector3(
+        0,
+        -3.25,
+        -0.05
+      );
+
+
+    flowers.forEach(
+      (
+        config,
+        index
+      ) => {
+
+        const head =
+          createSunflower(
+            config.size
+          );
+
+
+        head.position.set(
+          config.x,
+          config.y,
+          config.z
+        );
+
+
+        head.rotation.set(
+          config.rx,
+          config.ry,
+          config.rz
+        );
+
+
+        bouquet.add(head);
+
+
+        flowerHeads.push({
+          mesh: head,
+          baseRotation:
+            head.rotation.clone(),
+          phase:
+            index * 0.91
+        });
+
+
+        // Stem joins slightly behind center
+        const stemEnd =
+          new THREE.Vector3(
+            config.x,
+            config.y - 0.05,
+            config.z - 0.17
+          );
+
+
+        const bottomVariation =
+          new THREE.Vector3(
+            (index - 3) * 0.025,
+            0,
+            Math.sin(index) * 0.03
+          );
+
+
+        const stemStart =
+          bouquetBase
+            .clone()
+            .add(bottomVariation);
+
+
+        const stem =
+          createStem(
+            stemStart,
+            stemEnd,
+            0.045
+          );
+
+
+        bouquet.add(stem);
+
+
+        // --------------------------------------------------------
+        // Leaves
+        // --------------------------------------------------------
+
+        const leafT =
+          0.38 +
+          (index % 3) *
+          0.09;
+
+
+        const leafPosition =
+          stemStart
+            .clone()
+            .lerp(
+              stemEnd,
+              leafT
+            );
+
+
+        const side =
+          index % 2 === 0
+            ? -1
+            : 1;
+
+
+        const leaf =
+          createLeaf(
+            leafPosition,
+            side,
+            0.85 +
+            (index % 3) * 0.08,
+            Math.sin(index * 3.1) * 0.15
+          );
+
+
+        bouquet.add(leaf);
+
+
+        if (
+          index === 1 ||
+          index === 4 ||
+          index === 6
+        ) {
+
+          const secondPosition =
+            stemStart
+              .clone()
+              .lerp(
+                stemEnd,
+                0.58
+              );
+
+
+          bouquet.add(
+            createLeaf(
+              secondPosition,
+              -side,
+              0.72,
+              -0.12
+            )
+          );
+        }
+
+      }
+    );
+
+
+    // ============================================================
+    // BOUQUET PAPER WRAPPING
+    // ============================================================
+
+    const wrapperGeometry =
+      new THREE.CylinderGeometry(
+        1.52,
+        0.38,
+        3.25,
+        36,
+        1,
+        true
+      );
+
+
+    const wrapper =
+      new THREE.Mesh(
+        wrapperGeometry,
+        paperMaterial
+      );
+
+
+    wrapper.position.set(
+      0,
+      -1.32,
+      -0.06
+    );
+
+
+    wrapper.rotation.y =
+      -0.15;
+
+
+    bouquet.add(wrapper);
+
+
+    // Second translucent layer
+    const wrapperHighlight =
+      new THREE.Mesh(
+        wrapperGeometry,
+        paperHighlightMaterial
+      );
+
+
+    wrapperHighlight.position.set(
+      0.12,
+      -1.26,
+      0.02
+    );
+
+
+    wrapperHighlight.rotation.y =
+      0.45;
+
+
+    wrapperHighlight.scale.set(
+      0.93,
+      1.02,
+      0.93
+    );
+
+
+    bouquet.add(
+      wrapperHighlight
+    );
+
+
+    // ============================================================
+    // RIBBON
+    // ============================================================
+
+    const ribbonRing =
+      new THREE.Mesh(
+        new THREE.TorusGeometry(
+          0.43,
+          0.055,
+          10,
+          40
+        ),
+        ribbonMaterial
+      );
+
+
+    ribbonRing.position.set(
+      0,
+      -1.77,
+      0
+    );
+
+
+    ribbonRing.rotation.x =
+      Math.PI / 2;
+
+
+    bouquet.add(ribbonRing);
+
+
+    const ribbonTailGeometry =
+      new THREE.BoxGeometry(
+        0.1,
+        0.94,
+        0.035
+      );
+
+
+    const tailOne =
+      new THREE.Mesh(
+        ribbonTailGeometry,
+        ribbonMaterial
+      );
+
+
+    tailOne.position.set(
+      -0.14,
+      -2.17,
+      0.14
+    );
+
+
+    tailOne.rotation.z =
+      0.18;
+
+
+    tailOne.rotation.x =
+      -0.12;
+
+
+    bouquet.add(tailOne);
+
+
+    const tailTwo =
+      new THREE.Mesh(
+        ribbonTailGeometry,
+        ribbonMaterial
+      );
+
+
+    tailTwo.position.set(
+      0.14,
+      -2.17,
+      0.10
+    );
+
+
+    tailTwo.rotation.z =
+      -0.22;
+
+
+    tailTwo.rotation.x =
+      0.1;
+
+
+    bouquet.add(tailTwo);
+
+
+    // ============================================================
+    // FLOATING DUST / LIGHT PARTICLES
+    // ============================================================
+
+    const particleCount = 90;
+
+    const particlePositions =
+      new Float32Array(
+        particleCount * 3
+      );
+
+
+    for (
+      let i = 0;
+      i < particleCount;
+      i++
+    ) {
+
+      particlePositions[
+        i * 3
+      ] =
+        (
+          Math.random() -
+          0.5
+        ) * 12;
+
+
+      particlePositions[
+        i * 3 + 1
+      ] =
+        (
+          Math.random() -
+          0.5
+        ) * 8;
+
+
+      particlePositions[
+        i * 3 + 2
+      ] =
+        (
+          Math.random() -
+          0.5
+        ) * 5;
+    }
+
+
+    const particleGeometry =
+      new THREE.BufferGeometry();
+
+
+    particleGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(
+        particlePositions,
+        3
+      )
+    );
+
+
+    const particleMaterial =
+      new THREE.PointsMaterial({
+        color: 0xffe8a8,
+        size: 0.025,
+        transparent: true,
+        opacity: 0.45,
+        depthWrite: false
+      });
+
+
+    const particles =
+      new THREE.Points(
+        particleGeometry,
+        particleMaterial
+      );
+
+
+    scene.add(particles);
+
+
+    // ============================================================
+    // POINTER PARALLAX
+    // ============================================================
+
+    let pointerX = 0;
+    let pointerY = 0;
+
+    let targetX = 0;
+    let targetY = 0;
+
+
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+
+    window.addEventListener(
+      "pointermove",
+      event => {
+
+        // Don't use touch dragging for the scene.
+        // This leaves phone scrolling comfortable.
+        if (
+          event.pointerType === "touch"
+        ) {
+          return;
+        }
+
+
+        pointerX =
+          (
+            event.clientX /
+            window.innerWidth
+          ) * 2 - 1;
+
+
+        pointerY =
+          (
+            event.clientY /
+            window.innerHeight
+          ) * 2 - 1;
+
+
+        targetX =
+          pointerY *
+          0.055;
+
+
+        targetY =
+          pointerX *
+          0.13;
+
+      },
+      {
+        passive: true
+      }
+    );
+
+
+    // ============================================================
+    // RESPONSIVE 3D POSITIONING
+    // ============================================================
+
+    function updateLayout() {
+
+      const width =
+        window.innerWidth;
+
+      const height =
+        window.innerHeight;
+
+
+      const mobile =
+        width <= 760;
+
+
+      camera.aspect =
+        width /
+        height;
+
+
+      camera.updateProjectionMatrix();
+
+
+      renderer.setSize(
+        width,
+        height,
+        false
+      );
+
+
+      renderer.setPixelRatio(
+        Math.min(
+          window.devicePixelRatio,
+          mobile ? 1.5 : 1.8
+        )
+      );
+
+
+      if (mobile) {
+
+        camera.position.set(
+          0,
+          0,
+          11
+        );
+
+
+        bouquet.position.set(
+          0,
+          1.45,
+          0
+        );
+
+
+        bouquet.scale.setScalar(
+          0.72
+        );
+
+      } else {
+
+        camera.position.set(
+          0,
+          0,
+          10.5
+        );
+
+
+        bouquet.position.set(
+          -1.72,
+          -0.05,
+          0
+        );
+
+
+        bouquet.scale.setScalar(
+          0.98
+        );
+
+      }
+
+
+      camera.lookAt(
+        0,
+        0,
+        0
+      );
+
+    }
+
+
+    updateLayout();
+
+
+    window.addEventListener(
+      "resize",
+      updateLayout
+    );
+
+
+    // ============================================================
+    // ANIMATION
+    // ============================================================
+
+    const clock =
+      new THREE.Clock();
+
+
+    let currentRotX = 0;
+    let currentRotY = 0;
+
+
+    function animate() {
+
+      const time =
+        clock.getElapsedTime();
+
+
+      if (
+        !reducedMotion.matches
+      ) {
+
+        currentRotX =
+          THREE.MathUtils.lerp(
+            currentRotX,
+            targetX,
+            0.025
+          );
+
+
+        currentRotY =
+          THREE.MathUtils.lerp(
+            currentRotY,
+            targetY,
+            0.025
+          );
+
+
+        bouquet.rotation.x =
+          currentRotX +
+          Math.sin(time * 0.42) *
+          0.008;
+
+
+        bouquet.rotation.y =
+          currentRotY +
+          Math.sin(time * 0.32) *
+          0.025;
+
+
+        bouquet.rotation.z =
+          Math.sin(time * 0.27) *
+          0.008;
+
+
+        // Flowers gently move independently
+        flowerHeads.forEach(
+          (
+            flower,
+            index
+          ) => {
+
+            flower.mesh.rotation.z =
+              flower.baseRotation.z +
+              Math.sin(
+                time * 0.7 +
+                flower.phase
+              ) *
+              0.012;
+
+
+            flower.mesh.rotation.x =
+              flower.baseRotation.x +
+              Math.sin(
+                time * 0.53 +
+                index
+              ) *
+              0.006;
+
+          }
+        );
+
+
+        particles.rotation.y =
+          time * 0.012;
+
+
+        particles.position.y =
+          Math.sin(time * 0.25) *
+          0.06;
+
+      }
+
+
+      renderer.render(
+        scene,
+        camera
+      );
+
+
+      requestAnimationFrame(
+        animate
+      );
+
+    }
+
+
+    animate();
+
+  </script>
+
 </body>
 </html>
