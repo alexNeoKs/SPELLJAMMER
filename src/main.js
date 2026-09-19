@@ -51,7 +51,7 @@ const world = new THREE.Group();
 scene.add(world);
 
 const PLAYER_LENGTH = 92;
-const PLAYER_SPEED = 7;
+const PLAYER_SPEED = 0.01;
 
 // Keep the battlefield visually overwhelming at all times. Only the closest
 // ships use the heavy STL mesh; the remainder are lightweight instanced proxies.
