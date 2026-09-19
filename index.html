@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#02030a" />
+    <meta name="description" content="A cinematic Spelljammer battle backdrop for tabletop play." />
+    <title>Spelljammer Battle Table</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="loading" class="loading-screen">
+        <div class="loading-screen__title">ENTERING THE ASTRAL SEA</div>
+        <div id="loadingDetail" class="loading-screen__detail">Preparing battle space…</div>
+      </div>
+
+      <section class="course-panel" aria-label="Flight direction controls">
+        <div class="course-panel__header">
+          <div>
+            <div class="course-panel__eyebrow">FLIGHT VECTOR</div>
+            <div id="courseLabel" class="course-panel__course">FORWARD</div>
+          </div>
+          <div class="course-panel__telemetry">
+            <span id="hostileCount">1000</span>
+            <small>HOSTILES</small>
+          </div>
+        </div>
+
+        <div class="course-grid">
+          <button class="course-btn" id="portBtn" title="Turn port · Left Arrow">◀ PORT</button>
+          <button class="course-btn" id="forwardBtn" title="Level ship · Up Arrow">▲ FORWARD</button>
+          <button class="course-btn" id="starboardBtn" title="Turn starboard · Right Arrow">STARBOARD ▶</button>
+          <button class="course-btn" id="ascendBtn" title="Pitch up · R">ASCEND</button>
+          <button class="course-btn course-btn--destination" id="cathedralBtn" title="Advance staged Library approach · G">THE LIBRARY 1/3</button>
+          <button class="course-btn" id="descendBtn" title="Pitch down · F">DESCEND</button>
+        </div>
+
+        <div class="course-panel__keys">
+          <span>←/→ TURN</span>
+          <span>R/F PITCH</span>
+          <span>G LIBRARY</span>
+        </div>
+      </section>
+
+      <div class="controls" aria-label="Battle controls">
+        <button id="cameraBtn">Camera: Cinematic</button>
+        <button id="intensityBtn">Intensity: Battle</button>
+        <button id="volleyBtn" class="accent">Player Volley <kbd>V</kbd></button>
+        <button id="waveBtn">Enemy Wave <kbd>W</kbd></button>
+        <button id="pauseBtn">Pause <kbd>P</kbd></button>
+        <button id="shieldBtn" class="danger">Shield Down <kbd>S</kbd></button>
+        <button id="libraryBtn" class="mystic">The Library Learns <kbd>L</kbd></button>
+      </div>
+
+      <div id="eventMessage" class="event-message" aria-live="polite"></div>
+      <div id="flash" class="flash"></div>
+      <canvas id="scene"></canvas>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
